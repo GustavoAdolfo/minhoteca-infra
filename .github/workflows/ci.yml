@@ -70,7 +70,7 @@ jobs:
     defaults:
       run:
         # Define o diretório onde os comandos do Terraform serão executados
-        working-directory: terraform/envs/prod
+        working-directory: envs/prod
 
     steps:
       - name: Checkout do código
