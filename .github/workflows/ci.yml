@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    # strategy:
+    #   matrix:
+    #     node-version: [24.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init -migrate-state --backend-config=default.conf || terraform init --backend-config=default.conf -reconfigure || terraform init --backend-config=default.conf
+
+      - name: Terraform Validate
+        run: terraform validate
+
+  create-pr-to-main:
+    name: 'Create PR to Main'
+    needs: build-and-test # Garante que o PR só será aberto se o build e os testes passarem
+    runs-on: ubuntu-latest
+    # Executa este job SOMENTE quando houver um push/merge na branch develop
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+
+    permissions:
+      pull-requests: write # Permissão necessária para o bot do GitHub abrir o PR
+      contents: read
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necessário para obter o histórico da branch main
+
+      - name: Create Pull Request via GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch origin main
+
+  terraform:
+    name: 'Terraform Deploy'
+    needs: build-and-test # Garante que o deploy só rode se os testes passarem
+    runs-on: ubuntu-latest
+    # Executa este job SOMENTE quando houver um push na branch main
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    permissions:
+      id-token: write # Necessário para interagir com o OIDC da AWS
+      contents: read
+
+    defaults:
+      run:
+        # Define o diretório onde os comandos do Terraform serão executados
+        working-directory: terraform/envs/prod
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Credenciais da AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionMinhoteca
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: GitHubActionsTerraformDeploy
+          disable-retry: true
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init -migrate-state --backend-config=default.conf || terraform init --backend-config=default.conf -reconfigure || terraform init --backend-config=default.conf
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        # O auto-approve é essencial em ambientes de CI/CD pois não há interação humana
+        run: terraform apply -auto-approve tfplan
