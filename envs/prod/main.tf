@@ -34,7 +34,7 @@ module "security" {
   kms_verify_alias_name  = var.kms_verify_alias_name
   kms_verify_description = var.kms_verify_description
   kms_log_alias_name     = var.kms_log_alias_name
-  application_tags       = module.appservice.application_tags
+  application_tags       = module.appservice.appregistry_tags
   domain_name            = var.domain_name
   region                 = data.aws_region.current.name
 }
@@ -43,7 +43,7 @@ module "dns_domain" {
   source             = "../../modules/dns_domain"
   domain_name        = var.domain_name
   dnssec_name        = var.dnssec_name
-  application_tags   = module.appservice.application_tags
+  application_tags   = module.appservice.appregistry_tags
   enable_dnssec      = var.enable_dnssec
-  kms_dns_verify_arn = module.security.kms_dns_verify_arn
+  kms_dns_verify_arn = module.security.kms_minhoteca_verify_arn
 }
