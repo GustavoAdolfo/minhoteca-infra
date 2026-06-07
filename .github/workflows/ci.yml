@@ -93,23 +93,23 @@ jobs:
 
       - name: Terraform Plan
         env:
-          TF_VAR_domain_name: ${{ env.domain_name }}
-          TF_VAR_dnssec_name: ${{ env.dnssec_name }}
-          TF_VAR_enable_dnssec: ${{ env.enable_dnssec }}
-          TF_VAR_kms_log_description: ${{ env.kms_log_description }}
-          TF_VAR_kms_verify_alias_name: ${{ env.kms_verify_alias_name }}
-          TF_VAR_kms_verify_description: ${{ env.kms_verify_description }}
-          TF_VAR_kms_log_alias_name: ${{ env.kms_log_alias_name }}
+          TF_VAR_domain_name: ${{ vars.domain_name }}
+          TF_VAR_dnssec_name: ${{ vars.dnssec_name }}
+          TF_VAR_enable_dnssec: ${{ vars.enable_dnssec }}
+          TF_VAR_kms_log_description: ${{ vars.kms_log_description }}
+          TF_VAR_kms_verify_alias_name: ${{ vars.kms_verify_alias_name }}
+          TF_VAR_kms_verify_description: ${{ vars.kms_verify_description }}
+          TF_VAR_kms_log_alias_name: ${{ vars.kms_log_alias_name }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
         # O auto-approve é essencial em ambientes de CI/CD pois não há interação humana
         env:
-          TF_VAR_domain_name: ${{ env.domain_name }}
-          TF_VAR_dnssec_name: ${{ env.dnssec_name }}
-          TF_VAR_enable_dnssec: ${{ env.enable_dnssec }}
-          TF_VAR_kms_log_description: ${{ env.kms_log_description }}
-          TF_VAR_kms_verify_alias_name: ${{ env.kms_verify_alias_name }}
-          TF_VAR_kms_verify_description: ${{ env.kms_verify_description }}
-          TF_VAR_kms_log_alias_name: ${{ env.kms_log_alias_name }}
+          TF_VAR_domain_name: ${{ vars.domain_name }}
+          TF_VAR_dnssec_name: ${{ vars.dnssec_name }}
+          TF_VAR_enable_dnssec: ${{ vars.enable_dnssec }}
+          TF_VAR_kms_log_description: ${{ vars.kms_log_description }}
+          TF_VAR_kms_verify_alias_name: ${{ vars.kms_verify_alias_name }}
+          TF_VAR_kms_verify_description: ${{ vars.kms_verify_description }}
+          TF_VAR_kms_log_alias_name: ${{ vars.kms_log_alias_name }}
         run: terraform apply -auto-approve tfplan
