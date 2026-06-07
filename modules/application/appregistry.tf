@@ -1,6 +1,9 @@
 resource "aws_servicecatalogappregistry_application" "minhoteca_catalog" {
   name        = "${var.nome_projeto}-appregistry"
   description = "Projeto Minhoteca - gerenciado com Terraform"
+  tags = {
+    Projeto = "Minhoteca"
+  }
 }
 
 output "appregistry_name" {
