@@ -34,7 +34,7 @@ jobs:
         run: terraform validate
 
   create-pr-to-main:
-    name: 'Create PR to Main'
+    name: "Create PR to Main"
     needs: build-and-test # Garante que o PR só será aberto se o build e os testes passarem
     runs-on: ubuntu-latest
     # Executa este job SOMENTE quando houver um push/merge na branch develop
@@ -52,16 +52,17 @@ jobs:
 
       - name: Create Pull Request via GitHub CLI
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{  secrets.GITHUB_TOKEN  }}
         run: |
           git fetch origin main
 
   terraform:
-    name: 'Terraform Deploy'
+    name: "Terraform Deploy"
     needs: build-and-test # Garante que o deploy só rode se os testes passarem
     runs-on: ubuntu-latest
     # Executa este job SOMENTE quando houver um push na branch main
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: prod
 
     permissions:
       id-token: write # Necessário para interagir com o OIDC da AWS
@@ -79,8 +80,8 @@ jobs:
       - name: Configurar Credenciais da AWS via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionMinhoteca
-          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{  secrets.AWS_ACCOUNT_ID  }}:role/GitHubActionMinhoteca
+          aws-region: ${{  secrets.AWS_REGION  }}
           role-session-name: GitHubActionsTerraformDeploy
           disable-retry: true
 
@@ -91,6 +92,14 @@ jobs:
         run: terraform init -migrate-state --backend-config=default.conf || terraform init --backend-config=default.conf -reconfigure || terraform init --backend-config=default.conf
 
       - name: Terraform Plan
+        env:
+          TF_VAR_domain_name: ${{ env.domain_name }}
+          TF_VAR_dnssec_name: ${{ env.dnssec_name }}
+          TF_VAR_enable_dnssec: ${{ env.enable_dnssec }}
+          TF_VAR_kms_log_description: ${{ env.kms_log_description }}
+          TF_VAR_kms_verify_alias_name: ${{ env.kms_verify_alias_name }}
+          TF_VAR_kms_verify_description: ${{ env.kms_verify_description }}
+          TF_VAR_kms_log_alias_name: ${{ env.kms_log_alias_name }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
