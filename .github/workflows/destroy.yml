@@ -1,0 +1,52 @@
+name: Terraform Destroy
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type DESTROY to confirm the destroy workflow"
+        required: true
+        type: string
+
+jobs:
+  destroy:
+    if: github.ref == 'refs/heads/main' && github.event.inputs.confirm == 'DESTROY'
+    runs-on: ubuntu-latest
+    environment: prod
+
+    permissions:
+      contents: read
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: envs/prod
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Credenciais da AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionMinhoteca
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: GitHubActionsTerraformDestroy
+          disable-retry: true
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init -migrate-state --backend-config=default.conf || terraform init --backend-config=default.conf -reconfigure || terraform init --backend-config=default.conf
+
+      - name: Terraform Destroy
+        env:
+          TF_VAR_domain_name: ${{ vars.domain_name }}
+          TF_VAR_dnssec_name: ${{ vars.dnssec_name }}
+          TF_VAR_enable_dnssec: ${{ vars.enable_dnssec }}
+          TF_VAR_kms_log_description: ${{ vars.kms_log_description }}
+          TF_VAR_kms_verify_alias_name: ${{ vars.kms_verify_alias_name }}
+          TF_VAR_kms_verify_description: ${{ vars.kms_verify_description }}
+          TF_VAR_kms_log_alias_name: ${{ vars.kms_log_alias_name }}
+        run: terraform destroy -auto-approve

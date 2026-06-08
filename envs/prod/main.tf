@@ -27,23 +27,23 @@ module "appservice" {
   source = "../../modules/application"
 }
 
-# module "security" {
-#   source                 = "../../modules/security"
-#   account_id             = data.aws_caller_identity.current.account_id
-#   kms_log_description    = var.kms_log_description
-#   kms_verify_alias_name  = var.kms_verify_alias_name
-#   kms_verify_description = var.kms_verify_description
-#   kms_log_alias_name     = var.kms_log_alias_name
-#   application_tags       = module.appservice.appregistry_tags
-#   domain_name            = var.domain_name
-#   region                 = data.aws_region.current.name
-# }
+module "security" {
+  source                 = "../../modules/security"
+  account_id             = data.aws_caller_identity.current.account_id
+  kms_log_description    = var.kms_log_description
+  kms_verify_alias_name  = var.kms_verify_alias_name
+  kms_verify_description = var.kms_verify_description
+  kms_log_alias_name     = var.kms_log_alias_name
+  application_tags       = module.appservice.appregistry_tags
+  domain_name            = var.domain_name
+  region                 = data.aws_region.current.name
+}
 
-# module "dns_domain" {
-#   source             = "../../modules/dns_domain"
-#   domain_name        = var.domain_name
-#   dnssec_name        = var.dnssec_name
-#   application_tags   = module.appservice.appregistry_tags
-#   enable_dnssec      = var.enable_dnssec
-#   kms_dns_verify_arn = module.security.kms_minhoteca_verify_arn
-# }
+module "dns_domain" {
+  source             = "../../modules/dns_domain"
+  domain_name        = var.domain_name
+  dnssec_name        = var.dnssec_name
+  application_tags   = module.appservice.appregistry_tags
+  enable_dnssec      = var.enable_dnssec
+  kms_dns_verify_arn = module.security.kms_minhoteca_verify_arn
+}
