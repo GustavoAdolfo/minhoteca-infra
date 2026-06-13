@@ -44,3 +44,4 @@ terraform.rc
 # planout
 
 **/.terraform.lock.hcl
+**/*.txt

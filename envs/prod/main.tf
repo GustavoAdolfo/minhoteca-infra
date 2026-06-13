@@ -47,3 +47,21 @@ module "dns_domain" {
   enable_dnssec      = var.enable_dnssec
   kms_dns_verify_arn = module.security.kms_minhoteca_verify_arn
 }
+
+module "dns_certificate_validation" {
+  source                                       = "../../modules/dns_certificate_validation"
+  certificate_minhoteca_arn                    = module.appservice.certificate_minhoteca_arn
+  acm_certificate_minhoteca_validation_options = module.appservice.acm_certificate_minhoteca_validation_options
+  root_zone_id                                 = module.dns_domain.root_zone_id
+}
+
+
+module "buckets" {
+  source                           = "../../modules/buckets"
+  bucket_frontend_name             = var.bucket_frontend_name
+  bucket_resources_name            = var.bucket_resources_name
+  bucket_frontend_allowed_origins  = var.bucket_frontend_allowed_origins
+  bucket_resources_allowed_origins = var.bucket_resources_allowed_origins
+  application_tags                 = module.appservice.appregistry_tags
+  user_current_id                  = data.aws_canonical_user_id.current.id
+}
