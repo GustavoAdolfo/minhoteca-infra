@@ -50,8 +50,8 @@ module "dns_domain" {
 
 module "dns_certificate_validation" {
   source                                       = "../../modules/dns_certificate_validation"
-  certificate_minhoteca_arn                    = module.appservice.certificate_minhoteca_arn
-  acm_certificate_minhoteca_validation_options = module.appservice.acm_certificate_minhoteca_validation_options
+  certificate_minhoteca_arn                    = module.security.acm_certificate_minhoteca_arn
+  acm_certificate_minhoteca_validation_options = module.security.acm_certificate_minhoteca_validation_options
   root_zone_id                                 = module.dns_domain.root_zone_id
 }
 
