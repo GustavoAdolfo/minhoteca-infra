@@ -32,6 +32,23 @@ variable "kms_log_alias_name" {
   description = "Nome do alias para a chave KMS utilizada para criptografar os logs do Route 53"
 }
 
+variable "bucket_frontend_name" {
+  type        = string
+  description = "Name of the S3 bucket to store the frontend application"
+}
+variable "bucket_frontend_allowed_origins" {
+  type        = list(string)
+  description = "List of allowed origins for CORS configuration of the frontend bucket"
+}
+variable "bucket_resources_name" {
+  type        = string
+  description = "Name of the S3 bucket to store the resources for the frontend application"
+}
+variable "bucket_resources_allowed_origins" {
+  type        = list(string)
+  description = "List of allowed origins for CORS configuration of the resources bucket"
+}
+
 # variable "default_name" {
 #   description = "Nome base para os recursos do projeto Minhoteca"
 #   type        = string
@@ -171,10 +188,4 @@ variable "kms_log_alias_name" {
 # #   type    = number
 # #   default = 1
 # # }
-
-# # # frontend + CDN
-# variable "frontend_dist_path" {
-#   type    = string
-#   default = "../../minhoteca-site/dist/"
-# }
 
