@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [main, develop]
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -16,10 +13,6 @@ jobs:
     permissions:
       contents: read
       packages: read
-
-    # strategy:
-    #   matrix:
-    #     node-version: [24.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -100,6 +93,10 @@ jobs:
           TF_VAR_kms_verify_alias_name: ${{ vars.kms_verify_alias_name }}
           TF_VAR_kms_verify_description: ${{ vars.kms_verify_description }}
           TF_VAR_kms_log_alias_name: ${{ vars.kms_log_alias_name }}
+          TF_VAR_bucket_frontend_allowed_origins: ${{ vars.bucket_frontend_allowed_origins }}
+          TF_VAR_bucket_frontend_name: ${{ vars.bucket_frontend_name }}
+          TF_VAR_bucket_resources_allowed_origins: ${{ vars.bucket_resources_allowed_origins }}
+          TF_VAR_bucket_resources_name: ${{ vars.bucket_resources_name }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
@@ -112,4 +109,8 @@ jobs:
           TF_VAR_kms_verify_alias_name: ${{ vars.kms_verify_alias_name }}
           TF_VAR_kms_verify_description: ${{ vars.kms_verify_description }}
           TF_VAR_kms_log_alias_name: ${{ vars.kms_log_alias_name }}
+          TF_VAR_bucket_frontend_allowed_origins: ${{ vars.bucket_frontend_allowed_origins }}
+          TF_VAR_bucket_frontend_name: ${{ vars.bucket_frontend_name }}
+          TF_VAR_bucket_resources_allowed_origins: ${{ vars.bucket_resources_allowed_origins }}
+          TF_VAR_bucket_resources_name: ${{ vars.bucket_resources_name }}
         run: terraform apply -auto-approve tfplan
