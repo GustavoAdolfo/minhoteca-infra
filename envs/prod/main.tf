@@ -93,7 +93,7 @@ module "dns_records" {
   log_retention_in_days     = var.log_retention_in_days
   log_route53_group_name    = var.log_route53_group_name
   domain_log_policy         = var.domain_log_policy
-  kms_log_arn               = module.security.kms_minhoteca_log_arn
   account_id                = data.aws_caller_identity.current.account_id
   aws_region                = data.aws_region.current.name
+  kms_log_arn               = module.security.minhoteca_encrypt_cdn_log_arn
 }
