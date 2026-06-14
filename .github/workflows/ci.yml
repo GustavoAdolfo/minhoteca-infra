@@ -95,9 +95,15 @@ jobs:
           TF_VAR_kms_log_alias_name: ${{ vars.kms_log_alias_name }}
           TF_VAR_bucket_frontend_allowed_origins: ${{ vars.bucket_frontend_allowed_origins }}
           TF_VAR_bucket_frontend_name: ${{ vars.bucket_frontend_name }}
-          TF_VAR_bucket_resources_allowed_origins: ${{ vars.bucket_resources_allowed_origins }}
-          TF_VAR_bucket_resources_name: ${{ vars.bucket_resources_name }}
+          TF_VAR_bucket_arquivos_allowed_origins: ${{ vars.bucket_arquivos_allowed_origins }}
+          TF_VAR_bucket_arquivos_name: ${{ vars.bucket_arquivos_name }}
           TF_VAR_arquivos_path_rewrite: ${{ vars.arquivos_path_rewrite }}
+          TF_VAR_bucket_cdn_log: ${{ vars.bucket_cdn_log }}
+          TF_VAR_spa_route_rewrite: ${{ vars.spa_route_rewrite }}
+          TF_VAR_arquivos_cache_policy_name: ${{ vars.arquivos_cache_policy_name }}
+          TF_VAR_arquivos_cache_policy_default_ttl: ${{ vars.arquivos_cache_policy_default_ttl }}
+          TF_Var_arquivos_cache_policy_max_ttl: ${{ vars.arquivos_cache_policy_max_ttl }}
+          TF_Var_arquivos_cache_policy_min_ttl: ${{ vars.arquivos_cache_policy_min_ttl }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
@@ -112,7 +118,13 @@ jobs:
           TF_VAR_kms_log_alias_name: ${{ vars.kms_log_alias_name }}
           TF_VAR_bucket_frontend_allowed_origins: ${{ vars.bucket_frontend_allowed_origins }}
           TF_VAR_bucket_frontend_name: ${{ vars.bucket_frontend_name }}
-          TF_VAR_bucket_resources_allowed_origins: ${{ vars.bucket_resources_allowed_origins }}
-          TF_VAR_bucket_resources_name: ${{ vars.bucket_resources_name }}
+          TF_VAR_bucket_arquivos_allowed_origins: ${{ vars.bucket_arquivos_allowed_origins }}
+          TF_VAR_bucket_arquivos_name: ${{ vars.bucket_arquivos_name }}
           TF_VAR_arquivos_path_rewrite: ${{ vars.arquivos_path_rewrite }}
+          TF_VAR_spa_route_rewrite: ${{ vars.spa_route_rewrite }}
+          TF_VAR_bucket_cdn_log: ${{ vars.bucket_cdn_log }}
+          TF_VAR_arquivos_cache_policy_name: ${{ vars.arquivos_cache_policy_name }}
+          TF_VAR_arquivos_cache_policy_default_ttl: ${{ vars.arquivos_cache_policy_default_ttl }}
+          TF_Var_arquivos_cache_policy_max_ttl: ${{ vars.arquivos_cache_policy_max_ttl }}
+          TF_Var_arquivos_cache_policy_min_ttl: ${{ vars.arquivos_cache_policy_min_ttl }}
         run: terraform apply -auto-approve tfplan
