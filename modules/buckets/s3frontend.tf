@@ -52,7 +52,7 @@ resource "aws_s3_bucket_cors_configuration" "cors_frontend" {
   }
 }
 
-data "aws_iam_policy_document" "frontend" {
+data "aws_iam_policy_document" "frontend_policy_document" {
   statement {
     actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.frontend.arn}/*"]
@@ -61,9 +61,11 @@ data "aws_iam_policy_document" "frontend" {
       identifiers = ["cloudfront.amazonaws.com"]
     }
     condition {
-      test     = "StringEquals"
+      test     = "ArnLike"
       variable = "AWS:SourceArn"
-      values   = [aws_cloudfront_distribution.cf_dist.arn]
+      values = [
+        "arn:aws:cloudfront::${var.account_id}:distribution/*"
+      ]
     }
   }
 
@@ -87,7 +89,23 @@ data "aws_iam_policy_document" "frontend" {
   }
 }
 
-resource "aws_s3_bucket_policy" "frontend" {
+resource "aws_s3_bucket_policy" "frontend_policy" {
   bucket = aws_s3_bucket.frontend.bucket
-  policy = data.aws_iam_policy_document.frontend.json
+  policy = data.aws_iam_policy_document.frontend_policy_document.json
+}
+
+output "bucket_frontend_name" {
+  value = aws_s3_bucket.frontend.id
+}
+
+output "bucket_frontend_arn" {
+  value = aws_s3_bucket.frontend.arn
+}
+
+output "bucket_frontend_domain_name" {
+  value = aws_s3_bucket.frontend.bucket_domain_name
+}
+
+output "bucket_frontend_regional_domain_name" {
+  value = aws_s3_bucket.frontend.bucket_regional_domain_name
 }
