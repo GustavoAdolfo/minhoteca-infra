@@ -1,0 +1,10 @@
+variable "root_zone_id" { type = string }
+variable "domain_name" { type = string }
+variable "cloudfront_domain_name" { type = string }
+variable "cloudfront_hosted_zone_id" { type = string }
+variable "log_retention_in_days" { type = number }
+variable "log_route53_group_name" { type = string }
+variable "domain_log_policy" { type = string }
+variable "kms_log_arn" { type = string }
+variable "account_id" { type = string }
+variable "aws_region" { type = string }

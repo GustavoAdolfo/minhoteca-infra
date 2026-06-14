@@ -83,3 +83,17 @@ module "cdn" {
   arquivos_cache_policy_name           = var.arquivos_cache_policy_name
   arquivos_cache_policy_default_ttl    = var.arquivos_cache_policy_default_ttl
 }
+
+module "dns_records" {
+  source                    = "../../modules/dns_records"
+  root_zone_id              = module.dns_domain.zone_id
+  domain_name               = var.domain_name
+  cloudfront_domain_name    = module.cdn.cloudfront_domain_name
+  cloudfront_hosted_zone_id = module.cdn.cloudfront_hosted_zone_id
+  log_retention_in_days     = var.log_retention_in_days
+  log_route53_group_name    = var.log_route53_group_name
+  domain_log_policy         = var.domain_log_policy
+  kms_log_arn               = module.security.kms_minhoteca_log_arn
+  account_id                = data.aws_caller_identity.current.account_id
+  aws_region                = data.aws_region.current.name
+}

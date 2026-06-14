@@ -40,7 +40,7 @@ jobs:
             --repo "$REPO" \
             --base main \
             --head "${{ github.event.workflow_run.head_repository.owner.login }}:develop" \
-            --title "chore: sync develop to main" \
+            --title "feat: sync develop to main" \
             --body "PR automática criada após a execução bem-sucedida do workflow CI na branch develop."
 
       - name: Create version tag
@@ -73,4 +73,3 @@ jobs:
           gh release create "${{ steps.version.outputs.tag_name }}" \
             --title "Release ${{ steps.version.outputs.tag_name }}" \
             --generate-notes
-
