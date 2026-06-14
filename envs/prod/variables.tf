@@ -69,6 +69,21 @@ variable "arquivos_cache_policy_default_ttl" {
   description = "TTL padrão para o cache dos arquivos estáticos (em segundos)"
   default     = 86400
 }
+
+variable "log_retention_in_days" {
+  type        = number
+  description = "Número de dias para manter os logs"
+}
+variable "log_route53_group_name" {
+  type        = string
+  description = "Nome do grupo de logs do CloudWatch para os logs do Route 53"
+}
+variable "domain_log_policy" {
+  type        = string
+  description = "Nome da política de recursos do CloudWatch para os logs do Route 53"
+}
+
+
 # variable "default_name" {
 #   description = "Nome base para os recursos do projeto Minhoteca"
 #   type        = string
@@ -78,14 +93,12 @@ variable "arquivos_cache_policy_default_ttl" {
 # # variable "books_file" { type = string }
 # # variable "countries_file" { type = string }
 # # variable "default_kms_alias" { type = string }
-# variable "domain_log_policy" { type = string }
 # # variable "dynamodb_hash_authors" { type = string }
 # # variable "dynamodb_hash_books" { type = string }
 # # variable "dynamodb_hash_pages" { type = string } 
 # # variable "dynamodb_hash_statistics" { type = string }
 # # variable "enable_token_mfa" { type = bool }
 # # variable "lambda_borrow_service_invoke_arn" { type = string }
-# variable "log_route53_group_name" { type = string }
 # variable "log_zone_retention_in_days" { type = number }
 # # variable "publishers_file" { type = string }
 # variable "access_token_validity" { type = number }
