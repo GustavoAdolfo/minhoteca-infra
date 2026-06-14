@@ -97,6 +97,7 @@ jobs:
           TF_VAR_bucket_frontend_name: ${{ vars.bucket_frontend_name }}
           TF_VAR_bucket_resources_allowed_origins: ${{ vars.bucket_resources_allowed_origins }}
           TF_VAR_bucket_resources_name: ${{ vars.bucket_resources_name }}
+          TF_VAR_arquivos_path_rewrite: ${{ vars.arquivos_path_rewrite }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
@@ -113,4 +114,5 @@ jobs:
           TF_VAR_bucket_frontend_name: ${{ vars.bucket_frontend_name }}
           TF_VAR_bucket_resources_allowed_origins: ${{ vars.bucket_resources_allowed_origins }}
           TF_VAR_bucket_resources_name: ${{ vars.bucket_resources_name }}
+          TF_VAR_arquivos_path_rewrite: ${{ vars.arquivos_path_rewrite }}
         run: terraform apply -auto-approve tfplan
