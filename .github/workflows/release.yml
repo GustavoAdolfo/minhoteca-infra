@@ -8,10 +8,11 @@ on:
 
 jobs:
   create-release:
-    if: ${{ github.event.workflow_run.head_branch == 'develop' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'develop' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     permissions:
+      actions: read
       contents: write
       pull-requests: write
 
@@ -19,13 +20,28 @@ jobs:
       - name: Checkout develop
         uses: actions/checkout@v4
         with:
-          ref: develop
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create PR to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          git fetch origin develop main --force
+          gh pr view --repo "$REPO" --base main --head "${{ github.event.workflow_run.head_repository.owner.login }}:develop" >/dev/null 2>&1 && exit 0
+          gh pr create \
+            --repo "$REPO" \
+            --base main \
+            --head "${{ github.event.workflow_run.head_repository.owner.login }}:develop" \
+            --title "chore: sync develop to main" \
+            --body "PR automática criada após a execução bem-sucedida do workflow CI na branch develop."
 
       - name: Create version tag
         id: version
@@ -58,17 +74,3 @@ jobs:
             --title "Release ${{ steps.version.outputs.tag_name }}" \
             --generate-notes
 
-      - name: Create PR to main
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if gh pr view --base main --head develop --json number >/dev/null 2>&1; then
-            echo "PR already exists from develop to main."
-            exit 0
-          fi
-
-          gh pr create \
-            --base main \
-            --head develop \
-            --title "chore: sync develop to main" \
-            --body "PR automática criada após a execução bem-sucedida do workflow CI na branch develop."
