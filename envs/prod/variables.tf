@@ -40,15 +40,35 @@ variable "bucket_frontend_allowed_origins" {
   type        = list(string)
   description = "List of allowed origins for CORS configuration of the frontend bucket"
 }
-variable "bucket_resources_name" {
+variable "bucket_arquivos_name" {
   type        = string
   description = "Name of the S3 bucket to store the resources for the frontend application"
 }
-variable "bucket_resources_allowed_origins" {
+variable "bucket_arquivos_allowed_origins" {
   type        = list(string)
   description = "List of allowed origins for CORS configuration of the resources bucket"
 }
-
+variable "bucket_cdn_log" {
+  type        = string
+  description = "Name of the S3 bucket to store the CloudFront logs"
+}
+variable "arquivos_path_rewrite" {
+  type        = string
+  description = "Nome da função do CloudFront para reescrita de path dos arquivos estáticos"
+}
+variable "spa_route_rewrite" {
+  type        = string
+  description = "Nome da função do CloudFront para reescrita de rotas do SPA"
+}
+variable "arquivos_cache_policy_name" {
+  type        = string
+  description = "Nome do cache policy para arquivos estáticos"
+}
+variable "arquivos_cache_policy_default_ttl" {
+  type        = number
+  description = "TTL padrão para o cache dos arquivos estáticos (em segundos)"
+  default     = 86400
+}
 # variable "default_name" {
 #   description = "Nome base para os recursos do projeto Minhoteca"
 #   type        = string
