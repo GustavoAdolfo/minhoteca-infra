@@ -104,6 +104,9 @@ jobs:
           TF_VAR_arquivos_cache_policy_default_ttl: ${{ vars.arquivos_cache_policy_default_ttl }}
           TF_Var_arquivos_cache_policy_max_ttl: ${{ vars.arquivos_cache_policy_max_ttl }}
           TF_Var_arquivos_cache_policy_min_ttl: ${{ vars.arquivos_cache_policy_min_ttl }}
+          TF_VAR_log_retention_in_days: ${{ vars.log_retention_in_days }}
+          TF_VAR_log_route53_group_name: ${{ vars.log_route53_group_name }}
+          TF_VAR_domain_log_policy: ${{ vars.domain_log_policy }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
@@ -127,4 +130,7 @@ jobs:
           TF_VAR_arquivos_cache_policy_default_ttl: ${{ vars.arquivos_cache_policy_default_ttl }}
           TF_Var_arquivos_cache_policy_max_ttl: ${{ vars.arquivos_cache_policy_max_ttl }}
           TF_Var_arquivos_cache_policy_min_ttl: ${{ vars.arquivos_cache_policy_min_ttl }}
+          TF_VAR_log_retention_in_days: ${{ vars.log_retention_in_days }}
+          TF_VAR_log_route53_group_name: ${{ vars.log_route53_group_name }}
+          TF_VAR_domain_log_policy: ${{ vars.domain_log_policy }}
         run: terraform apply -auto-approve tfplan
