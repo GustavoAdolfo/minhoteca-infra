@@ -12,6 +12,10 @@ resource "aws_cloudfront_function" "arquivos_path_rewrite" {
   comment = "Remove /arquivos do path antes de encaminhar ao bucket S3"
   publish = true
   code    = <<-EOT
+  lifecycle {
+    create_before_destroy = true
+  }
+
 function handler(event) {
   var request = event.request;
 
@@ -35,6 +39,10 @@ resource "aws_cloudfront_function" "spa_route_rewrite" {
   comment = "Reescreve apenas rotas SPA para /index.html sem mascarar erro de asset"
   publish = true
   code    = <<-EOT
+  lifecycle {
+    create_before_destroy = true
+  }
+
 function handler(event) {
   var request = event.request;
   var uri = request.uri;
