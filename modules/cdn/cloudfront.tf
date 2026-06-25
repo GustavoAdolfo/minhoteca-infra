@@ -6,7 +6,7 @@ resource "aws_cloudfront_origin_access_control" "cf_s3_oac" {
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_function" "resources_path_rewrite" {
+resource "aws_cloudfront_function" "arquivos_path_rewrite" {
   name    = var.arquivos_path_rewrite
   runtime = "cloudfront-js-2.0"
   comment = "Remove /arquivos do path antes de encaminhar ao bucket S3"
@@ -134,7 +134,7 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   ordered_cache_behavior {
-    path_pattern           = "/resources/*"
+    path_pattern           = "/arquivos/*"
     target_origin_id       = var.bucket_arquivos_name
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
@@ -144,7 +144,7 @@ resource "aws_cloudfront_distribution" "frontend" {
 
     function_association {
       event_type   = "viewer-request"
-      function_arn = aws_cloudfront_function.resources_path_rewrite.arn
+      function_arn = aws_cloudfront_function.arquivos_path_rewrite.arn
     }
   }
 
