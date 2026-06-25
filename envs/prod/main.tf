@@ -66,23 +66,23 @@ module "buckets" {
   account_id                      = data.aws_caller_identity.current.account_id
 }
 
-module "cdn" {
-  source                               = "../../modules/cdn"
-  domain_name                          = var.domain_name
-  certificate_arn                      = module.security.acm_certificate_minhoteca_arn
-  bucket_frontend_name                 = module.buckets.bucket_frontend_name
-  bucket_arquivos_name                 = module.buckets.bucket_arquivos_name
-  bucket_frontend_regional_domain_name = module.buckets.bucket_frontend_regional_domain_name
-  bucket_arquivos_domain_name          = module.buckets.bucket_arquivos_domain_name
-  bucket_cdn_log                       = var.bucket_cdn_log
-  application_tags                     = module.appservice.appregistry_tags
-  cdn_log_key_id                       = module.security.minhoteca_encrypt_cdn_log_key_id
-  user_current_id                      = data.aws_canonical_user_id.current.id
-  arquivos_path_rewrite                = var.arquivos_path_rewrite
-  spa_route_rewrite                    = var.spa_route_rewrite
-  arquivos_cache_policy_name           = var.arquivos_cache_policy_name
-  arquivos_cache_policy_default_ttl    = var.arquivos_cache_policy_default_ttl
-}
+# module "cdn" {
+#   source                               = "../../modules/cdn"
+#   domain_name                          = var.domain_name
+#   certificate_arn                      = module.security.acm_certificate_minhoteca_arn
+#   bucket_frontend_name                 = module.buckets.bucket_frontend_name
+#   bucket_arquivos_name                 = module.buckets.bucket_arquivos_name
+#   bucket_frontend_regional_domain_name = module.buckets.bucket_frontend_regional_domain_name
+#   bucket_arquivos_domain_name          = module.buckets.bucket_arquivos_domain_name
+#   bucket_cdn_log                       = var.bucket_cdn_log
+#   application_tags                     = module.appservice.appregistry_tags
+#   cdn_log_key_id                       = module.security.minhoteca_encrypt_cdn_log_key_id
+#   user_current_id                      = data.aws_canonical_user_id.current.id
+#   arquivos_path_rewrite                = var.arquivos_path_rewrite
+#   spa_route_rewrite                    = var.spa_route_rewrite
+#   arquivos_cache_policy_name           = var.arquivos_cache_policy_name
+#   arquivos_cache_policy_default_ttl    = var.arquivos_cache_policy_default_ttl
+# }
 
 module "dns_records" {
   source                    = "../../modules/dns_records"
