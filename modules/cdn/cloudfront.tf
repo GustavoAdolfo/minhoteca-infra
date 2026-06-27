@@ -12,10 +12,6 @@ resource "aws_cloudfront_function" "arquivos_path_rewrite" {
   comment = "Remove /arquivos do path antes de encaminhar ao bucket S3"
   publish = true
   code    = <<-EOT
-  lifecycle {
-    create_before_destroy = true
-  }
-
 function handler(event) {
   var request = event.request;
 
@@ -31,6 +27,10 @@ function handler(event) {
   return request;
 }
 EOT
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_cloudfront_function" "spa_route_rewrite" {
@@ -39,10 +39,6 @@ resource "aws_cloudfront_function" "spa_route_rewrite" {
   comment = "Reescreve apenas rotas SPA para /index.html sem mascarar erro de asset"
   publish = true
   code    = <<-EOT
-  lifecycle {
-    create_before_destroy = true
-  }
-
 function handler(event) {
   var request = event.request;
   var uri = request.uri;
@@ -67,6 +63,10 @@ function handler(event) {
   return request;
 }
 EOT
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 
@@ -99,11 +99,11 @@ resource "aws_cloudfront_cache_policy" "arquivos_cache_policy" {
 }
 
 resource "aws_cloudfront_distribution" "frontend" {
+  comment             = "CloudFront distribution for ${var.domain_name}"
   enabled             = true
   default_root_object = "index.html"
   aliases             = ["www.${var.domain_name}", var.domain_name]
   is_ipv6_enabled     = true
-  comment             = var.bucket_frontend_name
   http_version        = "http2"
   wait_for_deployment = true
 
