@@ -142,13 +142,14 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   ordered_cache_behavior {
-    path_pattern           = "/arquivos/*"
-    target_origin_id       = var.bucket_arquivos_name
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    cache_policy_id        = aws_cloudfront_cache_policy.arquivos_cache_policy.id
+    path_pattern               = "/arquivos/*"
+    target_origin_id           = var.bucket_arquivos_name
+    viewer_protocol_policy     = "redirect-to-https"
+    allowed_methods            = ["GET", "HEAD"]
+    cached_methods             = ["GET", "HEAD"]
+    compress                   = true
+    cache_policy_id            = aws_cloudfront_cache_policy.arquivos_cache_policy.id
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.headers_policy.id
 
     function_association {
       event_type   = "viewer-request"
@@ -216,6 +217,14 @@ resource "aws_cloudfront_response_headers_policy" "headers_policy" {
       include_subdomains         = true
       override                   = true
       preload                    = true
+    }
+  }
+
+  custom_headers_config {
+    items {
+      header   = "Cache-Control"
+      override = true
+      value    = "public, max-age=${var.arquivos_cache_policy_default_ttl}"
     }
   }
 }
