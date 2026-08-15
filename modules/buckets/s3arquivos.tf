@@ -54,20 +54,40 @@ resource "aws_s3_bucket_cors_configuration" "cors_arquivos" {
 
 data "aws_iam_policy_document" "s3_arquivos_policy_document" {
   statement {
+    sid    = "AllowCloudFrontRead"
+    effect = "Allow"
+
     actions = ["s3:GetObject"]
     resources = [
       "${aws_s3_bucket.arquivos.arn}/*"
     ]
+
     principals {
       type        = "Service"
       identifiers = ["cloudfront.amazonaws.com"]
     }
+
     condition {
       test     = "ArnLike"
       variable = "AWS:SourceArn"
       values = [
         "arn:aws:cloudfront::${var.account_id}:distribution/*"
       ]
+    }
+  }
+
+  statement {
+    sid    = "AllowSignedUploads"
+    effect = "Allow"
+
+    actions = ["s3:PutObject"]
+    resources = [
+      "${aws_s3_bucket.arquivos.arn}/*"
+    ]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${var.account_id}:role/SEU_ROLE_OU_USUARIO"]
     }
   }
 }
