@@ -75,21 +75,6 @@ data "aws_iam_policy_document" "s3_arquivos_policy_document" {
       ]
     }
   }
-
-  statement {
-    sid    = "AllowSignedUploads"
-    effect = "Allow"
-
-    actions = ["s3:PutObject"]
-    resources = [
-      "${aws_s3_bucket.arquivos.arn}/*"
-    ]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.account_id}:role/SEU_ROLE_OU_USUARIO"]
-    }
-  }
 }
 
 resource "aws_s3_bucket_policy" "s3_arquivos_policy" {
