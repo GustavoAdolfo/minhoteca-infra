@@ -97,3 +97,8 @@ module "dns_records" {
   aws_region                = data.aws_region.current.name
   kms_log_arn               = module.security.minhoteca_encrypt_cdn_log_arn
 }
+
+module "mensageria" {
+  source           = "../../modules/mensageria"
+  application_tags = module.appservice.appregistry_tags
+}
