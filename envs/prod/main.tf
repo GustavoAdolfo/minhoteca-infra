@@ -76,7 +76,7 @@ module "cdn" {
   bucket_arquivos_domain_name          = module.buckets.bucket_arquivos_domain_name
   bucket_cdn_log                       = var.bucket_cdn_log
   application_tags                     = module.appservice.appregistry_tags
-  cdn_log_key_id                       = module.security.minhoteca_encrypt_cdn_log_key_id
+  cdn_log_key_id                       = module.security.minhoteca_encrypt_key_id
   user_current_id                      = data.aws_canonical_user_id.current.id
   arquivos_path_rewrite                = var.arquivos_path_rewrite
   spa_route_rewrite                    = var.spa_route_rewrite
@@ -95,10 +95,11 @@ module "dns_records" {
   domain_log_policy         = var.domain_log_policy
   account_id                = data.aws_caller_identity.current.account_id
   aws_region                = data.aws_region.current.name
-  kms_log_arn               = module.security.minhoteca_encrypt_cdn_log_arn
+  kms_log_arn               = module.security.minhoteca_encrypt_arn
 }
 
 module "mensageria" {
   source           = "../../modules/mensageria"
   application_tags = module.appservice.appregistry_tags
+  kms_key_id       = module.security.minhoteca_encrypt_key_id
 }
