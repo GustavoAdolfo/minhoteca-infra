@@ -56,6 +56,7 @@ module "dns_certificate_validation" {
 }
 
 module "buckets" {
+  contratos_kms_key_arn           = module.security.minhoteca_encrypt_arn
   source                          = "../../modules/buckets"
   bucket_frontend_name            = var.bucket_frontend_name
   bucket_arquivos_name            = var.bucket_arquivos_name
