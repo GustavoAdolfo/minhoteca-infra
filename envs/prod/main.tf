@@ -103,3 +103,9 @@ module "mensageria" {
   application_tags = module.appservice.appregistry_tags
   kms_key_id       = module.security.minhoteca_encrypt_key_id
 }
+
+module "dynamodb" {
+  source           = "../../modules/dynamodb"
+  application_tags = module.appservice.appregistry_tags
+  kms_key_arn      = module.security.minhoteca_encrypt_arn
+}
