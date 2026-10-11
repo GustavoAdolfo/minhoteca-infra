@@ -23,6 +23,10 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_canonical_user_id" "current" {}
 
+data "aws_kms_alias" "minhoteca_encrypt" {
+  name = var.kms_log_alias_name
+}
+
 # module "appservice" {
 #   source = "../../modules/application"
 # }
@@ -58,6 +62,7 @@ data "aws_canonical_user_id" "current" {}
 # }
 
 module "buckets" {
+  contratos_kms_key_arn           = data.aws_kms_alias.minhoteca_encrypt.target_key_arn
   source                          = "../../modules/buckets"
   bucket_frontend_name            = var.bucket_frontend_name
   bucket_arquivos_name            = var.bucket_arquivos_name

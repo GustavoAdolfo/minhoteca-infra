@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "kms_policy_encrypt" {
       values = [
         "sqs.${var.account_id}.amazonaws.com",
         "sns.${var.account_id}.amazonaws.com",
-        "s3.${var.account_id}.amazonaws.com",
+        "s3.${var.region}.amazonaws.com",
         "dynamodb.${var.region}.amazonaws.com"
       ]
     }
